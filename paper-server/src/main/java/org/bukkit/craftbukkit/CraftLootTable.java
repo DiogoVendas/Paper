@@ -21,8 +21,10 @@ import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftLocation;
@@ -91,8 +93,55 @@ public class CraftLootTable implements org.bukkit.loot.LootTable {
         CraftInventory craftInventory = (CraftInventory) inventory;
         Container handle = craftInventory.getInventory();
 
-        // TODO: When events are added, call event here w/ custom reason?
-        this.getHandle().fill(handle, nmsContext, random == null ? null : new RandomSourceWrapper(random), true);
+        // CraftBukkit start - Implement proper LootGenerateEvent handling
+        // Create NMS loot context for generation
+        net.minecraft.world.level.storage.loot.LootContext nmsLootContext = 
+            new net.minecraft.world.level.storage.loot.LootContext.Builder(nmsContext)
+                .withOptionalRandomSource(random == null ? null : new RandomSourceWrapper(random))
+                .create(this.getHandle().randomSequence);
+        
+        // Generate the initial loot items
+        List<net.minecraft.world.item.ItemStack> nmsLoot = this.getHandle().getRandomItems(nmsLootContext);
+        
+        // Convert to Bukkit items for the event
+        List<ItemStack> bukkitLoot = new ArrayList<>();
+        for (net.minecraft.world.item.ItemStack nmsItem : nmsLoot) {
+            if (!nmsItem.isEmpty()) {
+                bukkitLoot.add(CraftItemStack.asBukkitCopy(nmsItem));
+            }
+        }
+        
+        // Fire the LootGenerateEvent to allow plugins to modify the loot
+        org.bukkit.event.world.LootGenerateEvent event = CraftEventFactory.callLootGenerateEvent(
+            handle, this.getHandle(), nmsLootContext, bukkitLoot, true);
+        
+        if (event.isCancelled()) {
+            return;
+        }
+        
+        // Convert the modified loot back to NMS and place in inventory
+        List<net.minecraft.world.item.ItemStack> finalLoot = new ArrayList<>();
+        for (ItemStack bukkitItem : event.getLoot()) {
+            if (bukkitItem != null && !bukkitItem.getType().isAir()) {
+                finalLoot.add(CraftItemStack.asNMSCopy(bukkitItem));
+            }
+        }
+        
+        // Use the same distribution logic as the NMS LootTable.fill method
+        List<Integer> availableSlots = this.getHandle().getAvailableSlots(handle, nmsLootContext.getRandom());
+        this.getHandle().shuffleAndSplitItems(finalLoot, availableSlots.size(), nmsLootContext.getRandom());
+        
+        // Place items in the inventory
+        for (net.minecraft.world.item.ItemStack itemStack : finalLoot) {
+            if (availableSlots.isEmpty()) {
+                break;
+            }
+            if (itemStack.isEmpty()) {
+                continue;
+            }
+            handle.setItem(availableSlots.remove(0), itemStack);
+        }
+        // CraftBukkit end
     }
 
     @Override
