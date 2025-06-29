@@ -31,7 +31,7 @@
  * <pre>{@code
  * // Create context for entity death
  * LootContext context = LootContextBuilder.create(entity.getLocation())
- *     .killedEntity(entity)
+ *     .lootedEntity(entity)
  *     .killer(player)
  *     .tool(player.getInventory().getItemInMainHand())
  *     .damageSource(NamespacedKey.minecraft("player"))

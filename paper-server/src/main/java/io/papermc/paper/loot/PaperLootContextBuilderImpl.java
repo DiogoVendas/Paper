@@ -7,8 +7,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,20 +18,20 @@ public class PaperLootContextBuilderImpl implements LootContextBuilder {
     
     private Location location;
     private float luck = 0.0f;
-    private Entity killedEntity;
+    private Entity lootedEntity;
     private HumanEntity killer;
     private ItemStack tool;
     private NamespacedKey damageSource;
     private float explosionRadius = 0.0f;
     private final Map<String, Object> parameters = new HashMap<>();
 
-    public PaperLootContextBuilderImpl(@NotNull Location location) {
+    public PaperLootContextBuilderImpl(Location location) {
         this.location = Preconditions.checkNotNull(location, "Location cannot be null").clone();
         Preconditions.checkNotNull(location.getWorld(), "Location world cannot be null");
     }
 
     @Override
-    public @NotNull LootContextBuilder location(@NotNull Location location) {
+    public LootContextBuilder location(Location location) {
         Preconditions.checkNotNull(location, "Location cannot be null");
         Preconditions.checkNotNull(location.getWorld(), "Location world cannot be null");
         this.location = location.clone();
@@ -41,43 +39,43 @@ public class PaperLootContextBuilderImpl implements LootContextBuilder {
     }
 
     @Override
-    public @NotNull LootContextBuilder luck(float luck) {
+    public LootContextBuilder luck(float luck) {
         this.luck = luck;
         return this;
     }
 
     @Override
-    public @NotNull LootContextBuilder killedEntity(@Nullable Entity entity) {
-        this.killedEntity = entity;
+    public LootContextBuilder lootedEntity(Entity entity) {
+        this.lootedEntity = entity;
         return this;
     }
 
     @Override
-    public @NotNull LootContextBuilder killer(@Nullable HumanEntity killer) {
+    public LootContextBuilder killer(HumanEntity killer) {
         this.killer = killer;
         return this;
     }
 
     @Override
-    public @NotNull LootContextBuilder tool(@Nullable ItemStack tool) {
+    public LootContextBuilder tool(ItemStack tool) {
         this.tool = tool != null ? tool.clone() : null;
         return this;
     }
 
     @Override
-    public @NotNull LootContextBuilder damageSource(@Nullable NamespacedKey damageSource) {
+    public LootContextBuilder damageSource(NamespacedKey damageSource) {
         this.damageSource = damageSource;
         return this;
     }
 
     @Override
-    public @NotNull LootContextBuilder explosionRadius(float radius) {
+    public LootContextBuilder explosionRadius(float radius) {
         this.explosionRadius = radius;
         return this;
     }
 
     @Override
-    public @NotNull LootContextBuilder parameter(@NotNull String key, @Nullable Object value) {
+    public LootContextBuilder parameter(String key, Object value) {
         Preconditions.checkNotNull(key, "Parameter key cannot be null");
         if (value == null) {
             this.parameters.remove(key);
@@ -88,12 +86,12 @@ public class PaperLootContextBuilderImpl implements LootContextBuilder {
     }
 
     @Override
-    public @NotNull LootContext build() {
+    public LootContext build() {
         Preconditions.checkNotNull(location, "Location must be set");
         return new PaperLootContextImpl(
             location,
             luck,
-            killedEntity,
+            lootedEntity,
             killer,
             tool,
             damageSource,
@@ -103,7 +101,7 @@ public class PaperLootContextBuilderImpl implements LootContextBuilder {
     }
 
     @Override
-    public @NotNull LootContextBuilder validateFor(@NotNull LootTable lootTable) {
+    public LootContextBuilder validateFor(LootTable lootTable) {
         Preconditions.checkNotNull(lootTable, "LootTable cannot be null");
         Preconditions.checkNotNull(location, "Location must be set for loot table validation");
         
@@ -121,7 +119,7 @@ public class PaperLootContextBuilderImpl implements LootContextBuilder {
     }
 
     @Override
-    public @Nullable Location getLocation() {
+    public Location getLocation() {
         return location != null ? location.clone() : null;
     }
 
@@ -131,17 +129,17 @@ public class PaperLootContextBuilderImpl implements LootContextBuilder {
     }
 
     @Override
-    public @Nullable Entity getKilledEntity() {
-        return killedEntity;
+    public Entity getLootedEntity() {
+        return lootedEntity;
     }
 
     @Override
-    public @Nullable HumanEntity getKiller() {
+    public HumanEntity getKiller() {
         return killer;
     }
 
     @Override
-    public @Nullable ItemStack getTool() {
+    public ItemStack getTool() {
         return tool != null ? tool.clone() : null;
     }
 }

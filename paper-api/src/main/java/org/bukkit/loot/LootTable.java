@@ -5,8 +5,6 @@ import java.util.Random;
 import org.bukkit.Keyed;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * LootTables are technical files that represent what items should be in
@@ -29,8 +27,7 @@ public interface LootTable extends Keyed {
      *             The old LootContext API is fundamentally broken and cannot properly handle all loot table parameters.
      */
     @Deprecated(since = "1.21.4", forRemoval = true)
-    @NotNull
-    Collection<ItemStack> populateLoot(@Nullable Random random, @NotNull LootContext context);
+    Collection<ItemStack> populateLoot(Random random, LootContext context);
 
     /**
      * Attempt to fill an inventory with this LootTable's loot.
@@ -43,5 +40,5 @@ public interface LootTable extends Keyed {
      *             The old LootContext API is fundamentally broken and cannot properly handle all loot table parameters.
      */
     @Deprecated(since = "1.21.4", forRemoval = true)
-    void fillInventory(@NotNull Inventory inventory, @Nullable Random random, @NotNull LootContext context);
+    void fillInventory(Inventory inventory, Random random, LootContext context);
 }

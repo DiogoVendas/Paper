@@ -53,7 +53,7 @@ public class PaperLootTableImplementationTest {
         LootContext context = builder
             .location(testLocation)
             .luck(3.5f)
-            .killedEntity(testEntity)
+            .lootedEntity(testEntity)
             .killer(testPlayer)
             .tool(testTool)
             .explosionRadius(8.0f)
@@ -64,7 +64,7 @@ public class PaperLootTableImplementationTest {
         // Verify all values are properly stored and accessible
         assertEquals(testLocation, context.getLocation());
         assertEquals(3.5f, context.getLuck(), 0.001f);
-        assertEquals(testEntity, context.getKilledEntity());
+        assertEquals(testEntity, context.getLootedEntity());
         assertEquals(testPlayer, context.getKiller());
         assertEquals(testTool, context.getTool());
         assertEquals(8.0f, context.getExplosionRadius(), 0.001f);
@@ -141,7 +141,7 @@ public class PaperLootTableImplementationTest {
         LootContext fullContext = LootTableManager.createContext()
             .location(testLocation)
             .luck(1.0f)
-            .killedEntity(testEntity)
+            .lootedEntity(testEntity)
             .killer(testPlayer)
             .tool(testTool)
             .build();
@@ -193,7 +193,7 @@ public class PaperLootTableImplementationTest {
         LootContext entityDeathContext = LootTableManager.createContext()
             .location(testLocation)
             .luck(0.5f)
-            .killedEntity(testEntity)
+            .lootedEntity(testEntity)
             .killer(testPlayer)
             .tool(testTool)
             .parameter("looting_level", 2)
@@ -291,7 +291,7 @@ public class PaperLootTableImplementationTest {
         LootContext context = LootTableManager.createContext()
             .location(testLocation)
             .luck(1.5f)
-            .killedEntity(testEntity)
+            .lootedEntity(testEntity)
             .parameter("test", "value")
             .build();
 

@@ -8,8 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.loot.LootTable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -25,34 +23,34 @@ public class PaperLootTableManagerImpl implements LootTableManager {
         // Private constructor for singleton
     }
     
-    public static @NotNull LootTableManager getInstance() {
+    public static LootTableManager getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public @NotNull LootGenerator createGenerator(@NotNull LootTable lootTable) {
+    public LootGenerator createGenerator(LootTable lootTable) {
         Preconditions.checkNotNull(lootTable, "LootTable cannot be null");
         return new PaperLootGeneratorImpl(lootTable);
     }
 
     @Override
-    public @Nullable LootGenerator createGenerator(@NotNull NamespacedKey key) {
+    public LootGenerator createGenerator(NamespacedKey key) {
         LootTable lootTable = getLootTable(key);
         return lootTable != null ? new PaperLootGeneratorImpl(lootTable) : null;
     }
 
     @Override
-    public @Nullable LootTable getLootTable(@NotNull NamespacedKey key) {
+    public LootTable getLootTable(NamespacedKey key) {
         return Bukkit.getLootTable(key);
     }
 
     @Override
-    public boolean hasLootTable(@NotNull NamespacedKey key) {
+    public boolean hasLootTable(NamespacedKey key) {
         return getLootTable(key) != null;
     }
 
     @Override
-    public @NotNull Collection<NamespacedKey> getLootTableKeys() {
+    public Collection<NamespacedKey> getLootTableKeys() {
         MinecraftServer server = MinecraftServer.getServer();
         if (server == null) {
             return java.util.Collections.emptyList();
@@ -68,7 +66,7 @@ public class PaperLootTableManagerImpl implements LootTableManager {
     }
 
     @Override
-    public @NotNull LootContextBuilder createContextBuilder(@NotNull org.bukkit.Location location) {
+    public LootContextBuilder createContextBuilder(org.bukkit.Location location) {
         return new PaperLootContextBuilderImpl(location);
     }
 }

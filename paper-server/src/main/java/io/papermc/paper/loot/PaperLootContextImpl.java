@@ -15,8 +15,6 @@ import org.bukkit.craftbukkit.util.CraftLocation;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +27,7 @@ public class PaperLootContextImpl implements LootContext {
     
     private final Location location;
     private final float luck;
-    private final Entity killedEntity;
+    private final Entity lootedEntity;
     private final HumanEntity killer;
     private final ItemStack tool;
     private final NamespacedKey damageSource;
@@ -37,18 +35,18 @@ public class PaperLootContextImpl implements LootContext {
     private final Map<String, Object> parameters;
 
     public PaperLootContextImpl(
-            @NotNull Location location,
+            Location location,
             float luck,
-            @Nullable Entity killedEntity,
-            @Nullable HumanEntity killer,
-            @Nullable ItemStack tool,
-            @Nullable NamespacedKey damageSource,
+            Entity lootedEntity,
+            HumanEntity killer,
+            ItemStack tool,
+            NamespacedKey damageSource,
             float explosionRadius,
-            @NotNull Map<String, Object> parameters
+            Map<String, Object> parameters
     ) {
         this.location = location.clone();
         this.luck = luck;
-        this.killedEntity = killedEntity;
+        this.lootedEntity = lootedEntity;
         this.killer = killer;
         this.tool = tool != null ? tool.clone() : null;
         this.damageSource = damageSource;
@@ -57,7 +55,7 @@ public class PaperLootContextImpl implements LootContext {
     }
 
     @Override
-    public @NotNull Location getLocation() {
+    public Location getLocation() {
         return location.clone();
     }
 
@@ -67,22 +65,22 @@ public class PaperLootContextImpl implements LootContext {
     }
 
     @Override
-    public @Nullable Entity getKilledEntity() {
-        return killedEntity;
+    public Entity getLootedEntity() {
+        return lootedEntity;
     }
 
     @Override
-    public @Nullable HumanEntity getKiller() {
+    public HumanEntity getKiller() {
         return killer;
     }
 
     @Override
-    public @Nullable ItemStack getTool() {
+    public ItemStack getTool() {
         return tool != null ? tool.clone() : null;
     }
 
     @Override
-    public @Nullable NamespacedKey getDamageSource() {
+    public NamespacedKey getDamageSource() {
         return damageSource;
     }
 
@@ -92,20 +90,20 @@ public class PaperLootContextImpl implements LootContext {
     }
 
     @Override
-    public @Nullable Object getParameter(@NotNull String key) {
+    public Object getParameter(String key) {
         return parameters.get(key);
     }
 
     @Override
-    public @NotNull Map<String, Object> getParameters() {
+    public Map<String, Object> getParameters() {
         return parameters;
     }
 
     @Override
-    public @NotNull LootContextBuilder toBuilder() {
+    public LootContextBuilder toBuilder() {
         LootContextBuilder builder = LootContextBuilder.create(location)
             .luck(luck)
-            .killedEntity(killedEntity)
+            .lootedEntity(lootedEntity)
             .killer(killer)
             .tool(tool)
             .damageSource(damageSource)
@@ -124,7 +122,7 @@ public class PaperLootContextImpl implements LootContext {
      * @param parameterSet the required parameter set for the loot table
      * @return the converted LootParams
      */
-    public LootParams toNmsLootParams(@NotNull net.minecraft.util.context.ContextKeySet parameterSet) {
+    public LootParams toNmsLootParams(net.minecraft.util.context.ContextKeySet parameterSet) {
         Preconditions.checkNotNull(location.getWorld(), "LootContext world cannot be null");
         ServerLevel serverLevel = ((CraftWorld) location.getWorld()).getHandle();
         
@@ -137,9 +135,9 @@ public class PaperLootContextImpl implements LootContext {
         builder.withLuck(luck);
         
         // Set entities if present
-        if (killedEntity != null) {
+        if (lootedEntity != null) {
             setParameterIfSupported(builder, parameterSet, LootContextParams.THIS_ENTITY, 
-                ((CraftEntity) killedEntity).getHandle());
+                ((CraftEntity) lootedEntity).getHandle());
         }
         
         if (killer != null) {

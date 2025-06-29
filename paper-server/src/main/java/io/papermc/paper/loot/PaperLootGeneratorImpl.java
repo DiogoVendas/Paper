@@ -9,8 +9,6 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.RandomSourceWrapper;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,23 +24,23 @@ public class PaperLootGeneratorImpl implements LootGenerator {
     private final org.bukkit.loot.LootTable bukkitLootTable;
     private final LootTable nmsLootTable;
     
-    public PaperLootGeneratorImpl(@NotNull org.bukkit.loot.LootTable lootTable) {
+    public PaperLootGeneratorImpl(org.bukkit.loot.LootTable lootTable) {
         this.bukkitLootTable = Preconditions.checkNotNull(lootTable, "LootTable cannot be null");
         this.nmsLootTable = ((CraftLootTable) lootTable).getHandle();
     }
 
     @Override
-    public @NotNull org.bukkit.loot.LootTable getLootTable() {
+    public org.bukkit.loot.LootTable getLootTable() {
         return bukkitLootTable;
     }
 
     @Override
-    public @NotNull Collection<ItemStack> generateLoot(@NotNull LootContext context) {
+    public Collection<ItemStack> generateLoot(LootContext context) {
         return generateLoot(context, null);
     }
 
     @Override
-    public @NotNull Collection<ItemStack> generateLoot(@NotNull LootContext context, @Nullable Random random) {
+    public Collection<ItemStack> generateLoot(LootContext context, Random random) {
         Preconditions.checkNotNull(context, "LootContext cannot be null");
         
         if (!canGenerateWith(context)) {
@@ -70,12 +68,12 @@ public class PaperLootGeneratorImpl implements LootGenerator {
     }
 
     @Override
-    public void fillInventory(@NotNull Inventory inventory, @NotNull LootContext context) {
+    public void fillInventory(Inventory inventory, LootContext context) {
         fillInventory(inventory, context, null);
     }
 
     @Override
-    public void fillInventory(@NotNull Inventory inventory, @NotNull LootContext context, @Nullable Random random) {
+    public void fillInventory(Inventory inventory, LootContext context, Random random) {
         Preconditions.checkNotNull(inventory, "Inventory cannot be null");
         Preconditions.checkNotNull(context, "LootContext cannot be null");
         
@@ -99,18 +97,18 @@ public class PaperLootGeneratorImpl implements LootGenerator {
     }
 
     @Override
-    public @Nullable ItemStack generateSingleLoot(@NotNull LootContext context) {
+    public ItemStack generateSingleLoot(LootContext context) {
         return generateSingleLoot(context, null);
     }
 
     @Override
-    public @Nullable ItemStack generateSingleLoot(@NotNull LootContext context, @Nullable Random random) {
+    public ItemStack generateSingleLoot(LootContext context, Random random) {
         Collection<ItemStack> loot = generateLoot(context, random);
         return loot.isEmpty() ? null : loot.iterator().next();
     }
 
     @Override
-    public boolean canGenerateWith(@NotNull LootContext context) {
+    public boolean canGenerateWith(LootContext context) {
         Preconditions.checkNotNull(context, "LootContext cannot be null");
         
         // Check basic requirements
@@ -124,7 +122,7 @@ public class PaperLootGeneratorImpl implements LootGenerator {
     }
 
     @Override
-    public @NotNull Collection<String> getRequiredContextTypes() {
+    public Collection<String> getRequiredContextTypes() {
         // Analyze the NMS loot table's required parameters
         Collection<String> required = new ArrayList<>();
         
@@ -146,7 +144,7 @@ public class PaperLootGeneratorImpl implements LootGenerator {
     }
 
     @Override
-    public @NotNull Collection<String> getOptionalContextTypes() {
+    public Collection<String> getOptionalContextTypes() {
         // Analyze the NMS loot table's optional parameters
         Collection<String> optional = new ArrayList<>();
         

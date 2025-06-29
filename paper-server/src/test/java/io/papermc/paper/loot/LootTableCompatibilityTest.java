@@ -78,7 +78,7 @@ public class LootTableCompatibilityTest {
         LootContext newContext = LootTableManager.createContext()
             .location(testLocation)
             .luck(1.5f)
-            .killedEntity(testEntity)
+            .lootedEntity(testEntity)
             .killer(testPlayer)
             .build();
         
