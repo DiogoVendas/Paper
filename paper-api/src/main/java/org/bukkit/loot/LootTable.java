@@ -24,7 +24,11 @@ public interface LootTable extends Keyed {
      * @param random the random instance to use to generate loot
      * @param context context within to populate loot
      * @return a list of ItemStacks
+     * @deprecated Use {@link io.papermc.paper.loot.LootTableManager#createGenerator(LootTable)} 
+     *             and {@link io.papermc.paper.loot.LootGenerator#generateLoot(io.papermc.paper.loot.LootContext)} instead.
+     *             The old LootContext API is fundamentally broken and cannot properly handle all loot table parameters.
      */
+    @Deprecated(since = "1.21.4", forRemoval = true)
     @NotNull
     Collection<ItemStack> populateLoot(@Nullable Random random, @NotNull LootContext context);
 
@@ -34,6 +38,10 @@ public interface LootTable extends Keyed {
      * @param inventory the inventory to fill
      * @param random the random instance to use to generate loot
      * @param context context within to populate loot
+     * @deprecated Use {@link io.papermc.paper.loot.LootTableManager#createGenerator(LootTable)} 
+     *             and {@link io.papermc.paper.loot.LootGenerator#fillInventory(Inventory, io.papermc.paper.loot.LootContext)} instead.
+     *             The old LootContext API is fundamentally broken and cannot properly handle all loot table parameters.
      */
+    @Deprecated(since = "1.21.4", forRemoval = true)
     void fillInventory(@NotNull Inventory inventory, @Nullable Random random, @NotNull LootContext context);
 }

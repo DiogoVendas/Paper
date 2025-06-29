@@ -10,7 +10,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents additional information a {@link LootTable} can use to modify it's
  * generated loot.
+ * 
+ * @deprecated This class is fundamentally broken and cannot properly represent
+ *             all loot context parameters required by Minecraft. Use the new
+ *             {@link io.papermc.paper.loot.LootContext} and {@link io.papermc.paper.loot.LootContextBuilder} instead.
  */
+@Deprecated(since = "1.21.4", forRemoval = true)
 public final class LootContext {
 
     public static final int DEFAULT_LOOT_MODIFIER = -1;
